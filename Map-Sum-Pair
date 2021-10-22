@@ -1,0 +1,39 @@
+struct Trie {
+    map<char, Trie*> child = {};
+    int val = 0;
+};
+
+class MapSum {
+    unordered_map<string, int> m;
+    Trie root;
+public:
+    MapSum() {}
+    
+    void insert(string key, int val) {
+        int diff = val - m[key];
+        Trie* curr = &root;
+        for(char c:key){
+            if(!curr->child.count(c))
+                curr->child[c] = new Trie();
+            curr = curr->child[c];
+            curr->val += diff;
+        }
+        m[key] = val;
+    }
+    
+    int sum(string prefix) {
+        Trie* node = &root;
+        for(char c:prefix){
+            if(!node->child.count(c))    return 0;
+            node = node->child[c];
+        }
+        return node->val;
+    }
+};
+
+/**
+ * Your MapSum object will be instantiated and called as such:
+ * MapSum* obj = new MapSum();
+ * obj->insert(key,val);
+ * int param_2 = obj->sum(prefix);
+ */
